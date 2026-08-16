@@ -331,7 +331,7 @@ class _FinanceHomePageState extends State<FinanceHomePage>
               ),
               const SizedBox(height: 8),
               Text(
-                _balanceVisible ? _money(_totalBalance) : 'R$ ••••••',
+                _balanceVisible ? _money(_totalBalance) : 'R\$ ••••••',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 34,
