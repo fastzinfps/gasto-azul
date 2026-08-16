@@ -795,7 +795,7 @@ class _ManualTransactionSheetState extends State<_ManualTransactionSheet> {
             TextField(
               controller: _amount,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Valor (R$)'),
+              decoration: const InputDecoration(labelText: 'Valor (R\$)'),
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
