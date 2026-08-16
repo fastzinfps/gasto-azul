@@ -1,0 +1,57 @@
+name: Build Gasto Azul APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+
+      - name: Generate Android
+        run: |
+          rm -rf android
+          flutter create \
+            --platforms=android \
+            --org com.gastoazul \
+            --project-name gasto_azul \
+            .
+
+      - name: Apply notification integration
+        run: |
+          cp android_custom/app/src/main/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+
+          mkdir -p android/app/src/main/kotlin/com/gastoazul/gasto_azul
+
+          cp android_custom/app/src/main/kotlin/com/gastoazul/gasto_azul/MainActivity.kt \
+             android/app/src/main/kotlin/com/gastoazul/gasto_azul/MainActivity.kt
+
+          cp android_custom/app/src/main/kotlin/com/gastoazul/gasto_azul/BankNotificationListener.kt \
+             android/app/src/main/kotlin/com/gastoazul/gasto_azul/BankNotificationListener.kt
+
+      - name: Get packages
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Rename APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk GastoAzul-v0.1.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GastoAzul-APK
+          path: GastoAzul-v0.1.apk
